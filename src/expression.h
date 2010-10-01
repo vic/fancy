@@ -55,7 +55,8 @@ namespace fancy {
     EXP_RETRY,
     EXP_SUPER,
     EXP_RBARGSLITERAL,
-    EXP_SELF
+    EXP_SELF,
+    EXP_NEWLINE
   };
 
   /**

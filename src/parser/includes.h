@@ -24,6 +24,7 @@
 #include "nodes/super.h"
 #include "nodes/ruby_args_literal.h"
 #include "nodes/self.h"
+#include "nodes/newline.h"
 
 #include "../number.h"
 #include "../regexp.h"

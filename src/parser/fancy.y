@@ -57,6 +57,8 @@
   Symbol                *symbol;
   Array                 *array;
   Expression            *expression;
+
+  NewLine               *newline;
 }
 
 %start	programm
@@ -150,6 +152,8 @@
 %type  <expr_list>          finally_block
 %type  <expr_list>          catch_block_body
 
+%type  <newline>            nls
+
 %%
 
 programm:       /* empty */
@@ -177,7 +181,12 @@ delim:          nls
                 | delim delim
                 ;
 
-nls:            NL
+nls:            NL {
+                  $$ = new nodes::NewLine(yylineno);
+                  if(output_sexp) {
+                    (*parser::out_stream) << $$->to_sexp();
+                  }
+                }
                 | nls NL
                 ;
 

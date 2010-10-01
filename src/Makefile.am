@@ -25,6 +25,7 @@ parser_node_files = identifier \
 		retry \
 		super \
 		ruby_args_literal \
+		newline \
 		self
 
 parser_files = parser/lex \
