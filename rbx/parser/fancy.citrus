@@ -1,0 +1,45 @@
+# -*- ruby -*-
+
+grammar FancyParser
+
+    rule fancy_program
+      identifier
+    end
+
+    rule class_def
+      def_keyword space class_keyword space constant_name space? body
+    end
+
+    rule def_keyword
+      "def"
+    end
+
+    rule class_keyword
+      "class"
+    end
+
+    rule constant_name
+       /[A-Z]\w+/
+    end
+
+    rule body
+      "{" "}"
+    end
+
+    rule identifier
+      /[^ \t\r\n:]+:?/ <Fancy::Parser::Identifier>
+    end
+
+    rule white
+      (space | linefeed)+
+    end
+
+    rule linefeed
+      "\r"? "\n"
+    end
+
+    rule space
+      [ \t]+
+    end
+
+end
