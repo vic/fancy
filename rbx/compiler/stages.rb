@@ -75,6 +75,7 @@ module Rubinius
 
       def run
         # FIX-ME currently we dont't use filename, line
+        # Todo send line number to yacc
         ast = Fancy::Parser.parse_string(@input)
         @output = @root.new ast
         @output.file = @filename
@@ -82,12 +83,48 @@ module Rubinius
       end
     end
 
+    # Fancy file -> AST
+    # Using the parser_ext
+    class FancyFileParser < Stage
+      stage :fancy_code
+      next_stage FancyGenerator
+
+      def initialize(compiler, last)
+        super
+        compiler.parser = self
+      end
+
+      def root(root)
+        @root = root
+      end
+
+      def print
+        @print = true
+      end
+
+      def input(filename, line=1)
+        @filename = filename
+        @line = line
+      end
+
+      def run
+        # Todo send line number to yacc
+        ast = Fancy::Parser.parse_file(@filename)
+        @output = @root.new ast
+        @output.file = @filename
+        run_next
+      end
+    end
+
+
     # FancyFile -> FancySexp
     #
     # This stage produces a fancy sexp using ruby literals.
     #
-    class FancyFileParser < Stage
-      stage :fancy_file
+    # This code depended on the old c++ interpeter outputing an rsexp.
+    # Remove this when when we get rid of all old c++ code.
+    class FancyFileRSexpParser < Stage
+      stage :fancy_file_old
       next_stage FancyAST
 
       extend Forwardable

@@ -35,6 +35,34 @@ module Rubinius
       end
     end
 
+
+    # Use the old parser to compile a fancy file.
+    # This method will be removed once we have the new parser_ext
+    # tested for all our code.
+    def self.compile_fancy_file_old_parser(file, output = nil, line = 1, print = false)
+      compiler = new :fancy_file_old, :compiled_file
+
+      parser = compiler.parser
+      parser.root AST::Script
+
+      parser.input file, line
+
+      if print
+        parser.print
+        printer = compiler.packager.print
+        printer.bytecode = true
+      end
+
+      writer = compiler.writer
+      writer.name = output ? output : fancy_compiled_name(file)
+
+      begin
+        compiler.run
+      rescue Exception => e
+        compiler_error "Error trying to compile fancy: #{file}", e
+      end
+    end
+
     # Returns a compiled method to be loaded by the rbx runtime.
     def self.compile_fancy_code(code, filename = "(eval)", line = 1, print = false)
       compiler = new :fancy_code, :compiled_method
